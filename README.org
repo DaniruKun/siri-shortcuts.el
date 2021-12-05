@@ -1,4 +1,4 @@
-#+TITLE: package-name
+#+TITLE: shortcuts
 
 #+PROPERTY: LOGGING nil
 
@@ -6,9 +6,20 @@
 
 [[https://melpa.org/#/package-name][file:https://melpa.org/packages/package-name-badge.svg]] [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/package-name-badge.svg]]
 
-This is my package.  It is nice.  You should try it.
+This package allows you to interact with Siri Shortcuts on macOS Monterey and newer.
+It provides both interactive user commands, as well as public extension APIs.
 
-* Screenshots
+This opens up a lot of possibilities for Apple ecosystem automation, including but not limited to:
+
+- Automating HomeKit smart devices
+- Using existing iOS utility Shortcuts
+- Media playback automation
+- Executing other scripts
+- Interacting with the macOS window manager
+
+While a lot of these things could be accomlished with Automator and AppleScript, they are quite old and awkward to use, while Shortcuts offer a simple Scratch-like UI with lots of available automations, as well as a gallery to re-use existing Shortcuts.
+
+* Demo
 
 This screenshot shows how to frobnicate the fripulator:
 
@@ -19,12 +30,10 @@ This screenshot shows how to frobnicate the fripulator:
 :TOC:      :include siblings
 :END:
 :CONTENTS:
-  -  [[#installation][Installation]]
-  -  [[#usage][Usage]]
-  -  [[#changelog][Changelog]]
-  -  [[#credits][Credits]]
-  -  [[#development][Development]]
-  -  [[#license][License]]
+- [[#installation][Installation]]
+- [[#usage][Usage]]
+- [[#development][Development]]
+- [[#license][License]]
 :END:
 
 * Installation
@@ -38,15 +47,10 @@ If you installed from MELPA, you're done.  Just run one of the commands below.
 
 ** Manual
 
-  Install these required packages:
-
-  + =foo=
-  + =bar=
-
   Then put this file in your load-path, and put this in your init file:
 
   #+BEGIN_SRC elisp
-(require 'package-name)
+(require 'shortcuts)
   #+END_SRC
 
 * Usage
@@ -56,41 +60,28 @@ If you installed from MELPA, you're done.  Just run one of the commands below.
 
   Run one of these commands:
 
-  + =package-name-command=: Frobnicate the flange.
+  + =shortcuts-run=: Run a Siri Shortcut from a list of available Shortcuts.
+  + =shortcuts-gallery-open=: Open the Shortcuts Gallery.
+  + =shortcuts-gallery-search=: Search the Shortcuts Gallery.
+  + =shortcuts-open-app=: Open the Shortcuts app.
+  + =shortcuts-edit=: Edit an existing Shortcut.
+  + =shortcuts-create=: Create a new Shortcut.
 
 ** Tips
 
-+ You can customize settings in the =package-name= group.
++ You can use the full Shortcuts scheme URL API by using the function ~shortcuts-browse-url~.
 
-* Changelog
-:PROPERTIES:
-:TOC:      :depth 0
-:END:
+  For example:
 
-** 1.1.0
+  #+BEGIN_SRC elisp
+  (shortcuts-browse-url "open-shortcut" "MyShortcut")
+  #+END_SRC
 
-*Additions*
-+  Add command =package-name-debarnacle= to de-barnacle the hull.
+  Or use the high-level functions directly in your code:
 
-*Changes*
-+ Command =package-name-anchor= now takes an argument, =weigh= or =let-go=.
-
-*Internal*
-+  Rewrote input parsing.
-+  Factored out anchor-weighing.
-
-** 1.0.1
-
-*Fixes*
-+  Ensure anchor is secure before returning from =package-name-anchor=.
-
-** 1.0.0
-
-Initial release.
-
-* Credits
-
-  This package would not have been possible without the following packages: [[https://example.com/foo.el][foo]] which showed me how to bifurcate, and [[https://example.com/bar.el][bar]], which takes care of flanges.
+  #+BEGIN_SRC elisp
+  (shortcuts-run "SampleShortcut")
+  #+END_SRC
 
 * Development
 

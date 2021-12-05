@@ -49,7 +49,7 @@
 
 ;; Run one of these commands:
 
-;; `shortcuts-command': Frobnicate the flange.
+;; `shortcuts-run': Run a Siri Shortcut.
 
 ;;;; Tips
 
