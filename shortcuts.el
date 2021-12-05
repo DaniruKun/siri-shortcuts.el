@@ -115,7 +115,7 @@ Otherwise prints error message."
     "Shortcut name: "
     (completing-read (shortcuts-list))
     (list)
-    (interactive)) 
+    (interactive))
   (shortcuts-with-min-macos-ver shortcuts-ver-monterey
                     (shortcuts-browse-url "open-shortcut" name)))
 
@@ -141,13 +141,15 @@ Otherwise prints error message."
   "Browse a Shortcuts scheme URL ACTION.
 If ACTION is nil, then the bare URL is used, which will navigate to
 Shortcuts app's last state.
-ACTION - one of \"create-shortcut\", \"open-shortcut\", \"run-shortcut\", \"gallery\" or \"gallery/search\".
+ACTION - one of \"create-shortcut\", \"open-shortcut\",
+ \"run-shortcut\", \"gallery\" or \"gallery/search\".
 NAME - Shortcut name, can be unescaped.
 INPUT - The initial input into the shortcut.
 There are two input options: a text string or the word clipboard.
 When the INPUT value is a text string, that text is used.
 When the input value is Clipboard, the contents of the clipboard are used.
-TEXT - If INPUT is set to text, then value of TEXT is passed as input to the shortcut.
+TEXT - If INPUT is set to text, then value of TEXT is passed as input
+to the shortcut.
 If INPUT is set to clipboard, then this parameter is ignored.
 QUERY - determines the URL-encoded keywords to be searched in the Gallery.
 
@@ -167,7 +169,7 @@ See full details at: https://support.apple.com/en-gb/guide/shortcuts-mac/apd6243
     (browse-url (concat scheme path))))
 
 (defun shortcuts-list ()
-  "Returns a list of available shortcuts."
+  "Return a list of available shortcuts."
   (thread-first
     "shortcuts list"
     (shell-command-to-string)
@@ -176,7 +178,7 @@ See full details at: https://support.apple.com/en-gb/guide/shortcuts-mac/apd6243
 ;;;;; Private
 
 (defun shortcuts--osx-version ()
-  "Get macOS numerical version, e.g. 12.0.1"
+  "Get macOS numerical version, e.g. 12.0.1."
   (string-trim (shell-command-to-string
                 "sw_vers  -productVersion")))
 
