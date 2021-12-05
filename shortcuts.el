@@ -1,12 +1,12 @@
-;;; package-name.el --- Package description (don't include the word "Emacs")  -*- lexical-binding: t; -*-
+;;; shortcuts.el --- Interact with Siri Shortcuts  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017 First Last
+;; Copyright (C) 2021 Daniils Petrovs
 
-;; Author: First Last <name@example.com>
-;; URL: https://example.com/package-name.el
-;; Version: 0.1-pre
+;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
+;; URL: https://github.com/DaniruKun/shortcuts-el
+;; Version: 0.1
 ;; Package-Requires: ((emacs "25.2"))
-;; Keywords: something
+;; Keywords: convenience multimedia
 
 ;; This file is not part of GNU Emacs.
 
@@ -25,7 +25,10 @@
 
 ;;; Commentary:
 
-;; This package allows flanges to be easily frobnicated.
+;; This package allows you to interact with Siri Shortcuts in macOS.
+;; It includes both user-facing interactive commands, as well as a
+;; generic API wrapper around the Shortcuts URL scheme API.
+;; More info in the official Apple docs: https://support.apple.com/en-gb/guide/shortcuts-mac/apd621a1ad7a/mac
 
 ;;;; Installation
 
@@ -35,102 +38,150 @@
 
 ;;;;; Manual
 
-;; Install these required packages:
+;; Make sure you are running at least macOS Monterey!
 
-;; + foo
-;; + bar
-
-;; Then put this file in your load-path, and put this in your init
+;; Put this file in your load-path, and put this in your init
 ;; file:
 
-;; (require 'package-name)
+;; (require 'shortcuts)
 
 ;;;; Usage
 
 ;; Run one of these commands:
 
-;; `package-name-command': Frobnicate the flange.
+;; `shortcuts-command': Frobnicate the flange.
 
 ;;;; Tips
 
-;; + You can customize settings in the `package-name' group.
-
-;;;; Credits
-
-;; This package would not have been possible without the following
-;; packages: foo[1], which showed me how to bifurcate, and bar[2],
-;; which takes care of flanges.
-;;
-;;  [1] https://example.com/foo.el
-;;  [2] https://example.com/bar.el
+;; + You can customize settings in the `shortcuts' group.
 
 ;;; Code:
 
 ;;;; Requirements
 
-(require 'foo)
-(require 'bar)
-
 ;;;; Customization
 
-(defgroup package-name nil
-  "Settings for `package-name'."
-  :link '(url-link "https://example.com/package-name.el"))
-
-(defcustom package-name-something nil
-  "This setting does something."
-  :type 'something)
+(defgroup shortcuts nil
+  "Settings for `shortcuts'."
+  :link '(url-link "https://github.com/DaniruKun/shortcuts-el"))
 
 ;;;; Variables
 
-(defvar package-name-var nil
-  "A variable.")
+(defconst shortcuts-ver-monterey "12.0"
+  "Release version of macOS Monterey.")
 
-;;;;; Keymaps
+;;;; Macros
 
-;; This technique makes it easier and less verbose to define keymaps
-;; that have many bindings.
-
-(defvar package-name-map
-  ;; This makes it easy and much less verbose to define keys
-  (let ((map (make-sparse-keymap "package-name map"))
-        (maps (list
-               ;; Mappings go here, e.g.:
-               "RET" #'package-name-RET-command
-               [remap search-forward] #'package-name-search-forward
-               )))
-    (cl-loop for (key fn) on maps by #'cddr
-             do (progn
-                  (when (stringp key)
-                    (setq key (kbd key)))
-                  (define-key map key fn)))
-    map))
+(defmacro shortcuts-with-min-macos-ver (min-ver &rest body)
+  "Execute BODY if current macOS version meets MIN-VER requirement.
+Otherwise prints error message."
+  `(if (string-lessp (shortcuts--osx-version) ,min-ver)
+       (message (concat "Unsupported on this version of macOS, minimum required: " ,min-ver))
+     ,@body))
 
 ;;;; Commands
 
+(defalias 'shortcuts-open #'shortcuts-edit)
+
 ;;;###autoload
-(defun package-name-command (args)
-  "Frobnicate the flange."
+(defun shortcuts-run (name)
+  "Run a macOS Shortcut with a given NAME."
+  (thread-first
+    "Shortcut name: "
+    (completing-read (shortcuts-list))
+    (list)
+    (interactive))
+  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+                    (call-process "shortcuts" nil "*shortcuts*" nil "run" name)))
+
+;;;###autoload
+(defun shortcuts-open-app ()
+  "Open the Shortcuts app."
   (interactive)
-  (package-name-foo
-   (package-name--bar args)))
+  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+                    (call-process "open" nil 0 nil "-a" "Shortcuts.app")))
+
+;;;###autoload
+(defun shortcuts-create ()
+  "Open the Shortcuts editor to create a new shortcut."
+  (interactive)
+  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+                    (shortcuts-browse-url "create-shortcut")))
+
+;;;###autoload
+(defun shortcuts-edit (name)
+  "Edit a Shortcut with the given NAME."
+  (thread-first
+    "Shortcut name: "
+    (completing-read (shortcuts-list))
+    (list)
+    (interactive)) 
+  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+                    (shortcuts-browse-url "open-shortcut" name)))
+
+;;;###autoload
+(defun shortcuts-gallery-open ()
+  "Open the Shortcuts Gallery."
+  (interactive)
+  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+								(shortcuts-browse-url "gallery")))
+
+;;;###autoload
+(defun shortcuts-gallery-search (query)
+  "Search the Gallery with the given QUERY."
+  (interactive "sEnter search query: ")
+  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+                    (shortcuts-browse-url "gallery/search" nil nil nil query)))
 
 ;;;; Functions
 
 ;;;;; Public
 
-(defun package-name-foo (args)
-  "Return foo for ARGS."
-  (foo args))
+(defun shortcuts-browse-url (&optional action name input text query)
+  "Browse a Shortcuts scheme URL ACTION.
+If ACTION is nil, then the bare URL is used, which will navigate to
+Shortcuts app's last state.
+ACTION - one of \"create-shortcut\", \"open-shortcut\", \"run-shortcut\", \"gallery\" or \"gallery/search\".
+NAME - Shortcut name, can be unescaped.
+INPUT - The initial input into the shortcut.
+There are two input options: a text string or the word clipboard.
+When the INPUT value is a text string, that text is used.
+When the input value is Clipboard, the contents of the clipboard are used.
+TEXT - If INPUT is set to text, then value of TEXT is passed as input to the shortcut.
+If INPUT is set to clipboard, then this parameter is ignored.
+QUERY - determines the URL-encoded keywords to be searched in the Gallery.
+
+See full details at: https://support.apple.com/en-gb/guide/shortcuts-mac/apd624386f42/mac"
+  (let ((scheme "shortcuts://")
+        (path (cond
+               ((null action) "")
+               ((string= action "create-shortcut") "create-shortcut")
+               ((and (string= action "open-shortcut") name)
+                (concat "open-shortcut?name=" (url-encode-url name)))
+               ((and (string= action "run-shortcut") name)
+                (concat "run-shortcut?name=" (url-encode-url name)
+                        "&input=" input "&text=" (url-encode-url text)))
+               ((string= action "gallery") "gallery")
+               ((and (string= action "gallery/search") query)
+                (concat "gallery/search?query=" (url-encode-url query))))))
+    (browse-url (concat scheme path))))
+
+(defun shortcuts-list ()
+  "Returns a list of available shortcuts."
+  (thread-first
+    "shortcuts list"
+    (shell-command-to-string)
+    (split-string "\n")))
 
 ;;;;; Private
 
-(defun package-name--bar (args)
-  "Return bar for ARGS."
-  (bar args))
+(defun shortcuts--osx-version ()
+  "Get macOS numerical version, e.g. 12.0.1"
+  (string-trim (shell-command-to-string
+                "sw_vers  -productVersion")))
 
 ;;;; Footer
 
-(provide 'package-name)
+(provide 'shortcuts)
 
-;;; package-name.el ends here
+;;; shortcuts.el ends here
