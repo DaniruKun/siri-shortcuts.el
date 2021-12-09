@@ -24,7 +24,7 @@ While a lot of these things could be accomlished with Automator and AppleScript,
 
 This is a small demo of running a Siri Shortcut than turns on a Yeelight Light Strip and sets it to pink:
 
-[[file:shortcuts-demo.mov][Shortcuts Demo]]
+[[file:shortcuts-demo.gif]]
 
 * Contents                                                         :noexport:
 :PROPERTIES:
