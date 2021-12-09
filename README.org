@@ -6,6 +6,7 @@
 
 # [[https://melpa.org/#/dilbert][file:https://melpa.org/packages/dilbert-badge.svg]]
 [[https://github.com/DaniruKun/shortcuts-el/actions][file:https://github.com/DaniruKun/shortcuts-el/actions/workflows/ci.yml/badge.svg]]
+[[https://github.com/DaniruKun/shortcuts-el/actions/workflows/melpazoid.yml][file:https://github.com/DaniruKun/shortcuts-el/actions/workflows/melpazoid.yml/badge.svg]]
 
 This package allows you to interact with Siri Shortcuts on macOS Monterey and newer.
 It provides both interactive user commands, as well as public extension APIs.
