@@ -63,6 +63,7 @@
 
 (defgroup shortcuts nil
   "Settings for `shortcuts'."
+  :group 'external
   :link '(url-link "https://github.com/DaniruKun/shortcuts-el"))
 
 ;;;; Variables
