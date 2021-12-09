@@ -22,9 +22,9 @@ While a lot of these things could be accomlished with Automator and AppleScript,
 
 * Demo
 
-This screenshot shows how to frobnicate the fripulator:
+This is a small demo of running a Siri Shortcut than turns on a Yeelight Light Strip and sets it to pink:
 
-[[screenshot1.png]]
+[[file:shortcuts-demo.mov][Shortcuts Demo]]
 
 * Contents                                                         :noexport:
 :PROPERTIES:
