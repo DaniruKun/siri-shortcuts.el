@@ -4,7 +4,8 @@
 
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
-[[https://melpa.org/#/package-name][file:https://melpa.org/packages/package-name-badge.svg]] [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/package-name-badge.svg]]
+# [[https://melpa.org/#/dilbert][file:https://melpa.org/packages/dilbert-badge.svg]]
+[[https://github.com/DaniruKun/shortcuts-el/actions][file:https://github.com/DaniruKun/shortcuts-el/actions/workflows/ci.yml/badge.svg]]
 
 This package allows you to interact with Siri Shortcuts on macOS Monterey and newer.
 It provides both interactive user commands, as well as public extension APIs.
