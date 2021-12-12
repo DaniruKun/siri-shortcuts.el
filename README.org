@@ -4,7 +4,7 @@
 
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
-# [[https://melpa.org/#/dilbert][file:https://melpa.org/packages/dilbert-badge.svg]]
+[[https://melpa.org/#/siri-shortcuts][file:https://melpa.org/packages/siri-shortcuts-badge.svg]]
 [[https://github.com/DaniruKun/siri-shortcuts.el/actions][file:https://github.com/DaniruKun/siri-shortcuts.el/actions/workflows/ci.yml/badge.svg]]
 [[https://github.com/DaniruKun/siri-shortcuts.el/actions/workflows/melpazoid.yml][file:https://github.com/DaniruKun/siri-shortcuts.el/actions/workflows/melpazoid.yml/badge.svg]]
 
@@ -46,6 +46,10 @@ This is a small demo of running a Siri Shortcut than turns on a Yeelight Light S
 ** MELPA
 
 If you installed from MELPA, you're done.  Just run one of the commands below.
+
+#+BEGIN_EXAMPLE
+M-x package-install RET siri-shortcuts RET
+#+END_EXAMPLE
 
 ** Manual
 
