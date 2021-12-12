@@ -21,18 +21,13 @@ This opens up a lot of possibilities for Apple ecosystem automation, including b
 
 While a lot of these things could be accomlished with Automator and AppleScript, they are quite old and awkward to use, while Shortcuts offer a simple Scratch-like UI with lots of available automations, as well as a gallery to re-use existing Shortcuts.
 
-* Demo
-
-This is a small demo of running a Siri Shortcut than turns on a Yeelight Light Strip and sets it to pink:
-
-[[file:shortcuts-demo.gif]]
-
 * Contents                                                         :noexport:
 :PROPERTIES:
 :TOC:      :include siblings
 :END:
 :CONTENTS:
 - [[#installation][Installation]]
+- [[#demo][Demo]]
 - [[#usage][Usage]]
 - [[#development][Development]]
 - [[#license][License]]
@@ -58,6 +53,12 @@ M-x package-install RET siri-shortcuts RET
   #+BEGIN_SRC elisp
 (require 'siri-shortcuts)
   #+END_SRC
+
+* Demo
+
+This is a small demo of running a Siri Shortcut than turns on a Yeelight Light Strip and sets it to pink:
+
+[[file:shortcuts-demo.gif]]
 
 * Usage
 :PROPERTIES:
