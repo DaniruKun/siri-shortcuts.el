@@ -1,9 +1,9 @@
-;;; shortcuts.el --- Interact with Siri Shortcuts  -*- lexical-binding: t; -*-
+;;; siri-shortcuts.el --- Interact with Siri Shortcuts  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021 Daniils Petrovs
 
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
-;; URL: https://github.com/DaniruKun/shortcuts-el
+;; URL: https://github.com/DaniruKun/siri-shortcuts.el
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "25.2"))
 ;; Keywords: convenience multimedia
@@ -43,17 +43,17 @@
 ;; Put this file in your load-path, and put this in your init
 ;; file:
 
-;; (require 'shortcuts)
+;; (require 'siri-shortcuts)
 
 ;;;; Usage
 
 ;; Run one of these commands:
 
-;; `shortcuts-run': Run a Siri Shortcut.
+;; `siri-shortcuts-run': Run a Siri Shortcut.
 
 ;;;; Tips
 
-;; + You can customize settings in the `shortcuts' group.
+;; + You can customize settings in the `siri-shortcuts' group.
 
 ;;; Code:
 
@@ -61,84 +61,84 @@
 
 ;;;; Customization
 
-(defgroup shortcuts nil
-  "Settings for `shortcuts'."
+(defgroup siri-shortcuts nil
+  "Settings for `siri-shortcuts'."
   :group 'external
-  :link '(url-link "https://github.com/DaniruKun/shortcuts-el"))
+  :link '(url-link "https://github.com/DaniruKun/siri-shortcuts.el"))
 
 ;;;; Variables
 
-(defconst shortcuts-ver-monterey "12.0"
+(defconst siri-shortcuts-ver-monterey "12.0"
   "Release version of macOS Monterey.")
 
 ;;;; Macros
 
-(defmacro shortcuts-with-min-macos-ver (min-ver &rest body)
+(defmacro siri-shortcuts-with-min-macos-ver (min-ver &rest body)
   "Execute BODY if current macOS version meets MIN-VER requirement.
 Otherwise prints error message."
-  `(if (string-lessp (shortcuts--osx-version) ,min-ver)
+  `(if (string-lessp (siri-shortcuts--osx-version) ,min-ver)
        (message (concat "Unsupported on this version of macOS, minimum required: " ,min-ver))
      ,@body))
 
 ;;;; Commands
 
-(defalias 'shortcuts-open #'shortcuts-edit)
+(defalias 'siri-shortcuts-open #'siri-shortcuts-edit)
 
 ;;;###autoload
-(defun shortcuts-run (name)
+(defun siri-shortcuts-run (name)
   "Run a macOS Shortcut with a given NAME."
   (thread-first
     "Shortcut name: "
-    (completing-read (shortcuts-list))
+    (completing-read (siri-shortcuts-list))
     (list)
     (interactive))
-  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
                     (call-process "shortcuts" nil "*shortcuts*" nil "run" name)))
 
 ;;;###autoload
-(defun shortcuts-open-app ()
+(defun siri-shortcuts-open-app ()
   "Open the Shortcuts app."
   (interactive)
-  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
                     (call-process "open" nil 0 nil "-a" "Shortcuts.app")))
 
 ;;;###autoload
-(defun shortcuts-create ()
+(defun siri-shortcuts-create ()
   "Open the Shortcuts editor to create a new shortcut."
   (interactive)
-  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
-                    (shortcuts-browse-url "create-shortcut")))
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
+                    (siri-shortcuts-browse-url "create-shortcut")))
 
 ;;;###autoload
-(defun shortcuts-edit (name)
+(defun siri-shortcuts-edit (name)
   "Edit a Shortcut with the given NAME."
   (thread-first
     "Shortcut name: "
-    (completing-read (shortcuts-list))
+    (completing-read (siri-shortcuts-list))
     (list)
     (interactive))
-  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
-                    (shortcuts-browse-url "open-shortcut" name)))
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
+                    (siri-shortcuts-browse-url "open-shortcut" name)))
 
 ;;;###autoload
-(defun shortcuts-gallery-open ()
+(defun siri-shortcuts-gallery-open ()
   "Open the Shortcuts Gallery."
   (interactive)
-  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
-								(shortcuts-browse-url "gallery")))
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
+								(siri-shortcuts-browse-url "gallery")))
 
 ;;;###autoload
-(defun shortcuts-gallery-search (query)
+(defun siri-shortcuts-gallery-search (query)
   "Search the Gallery with the given QUERY."
   (interactive "sEnter search query: ")
-  (shortcuts-with-min-macos-ver shortcuts-ver-monterey
-                    (shortcuts-browse-url "gallery/search" nil nil nil query)))
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
+                    (siri-shortcuts-browse-url "gallery/search" nil nil nil query)))
 
 ;;;; Functions
 
 ;;;;; Public
 
-(defun shortcuts-browse-url (&optional action name input text query)
+(defun siri-shortcuts-browse-url (&optional action name input text query)
   "Browse a Shortcuts scheme URL ACTION.
 If ACTION is nil, then the bare URL is used, which will navigate to
 Shortcuts app's last state.
@@ -169,7 +169,7 @@ See full details at: https://support.apple.com/en-gb/guide/shortcuts-mac/apd6243
                 (concat "gallery/search?query=" (url-encode-url query))))))
     (browse-url (concat scheme path))))
 
-(defun shortcuts-list ()
+(defun siri-shortcuts-list ()
   "Return a list of available shortcuts."
   (thread-first
     "shortcuts list"
@@ -178,13 +178,13 @@ See full details at: https://support.apple.com/en-gb/guide/shortcuts-mac/apd6243
 
 ;;;;; Private
 
-(defun shortcuts--osx-version ()
+(defun siri-shortcuts--osx-version ()
   "Get macOS numerical version, e.g. 12.0.1."
   (string-trim (shell-command-to-string
                 "sw_vers  -productVersion")))
 
 ;;;; Footer
 
-(provide 'shortcuts)
+(provide 'siri-shortcuts)
 
-;;; shortcuts.el ends here
+;;; siri-shortcuts.el ends here
