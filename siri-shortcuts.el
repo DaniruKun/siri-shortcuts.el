@@ -4,7 +4,7 @@
 
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
 ;; URL: https://github.com/DaniruKun/siri-shortcuts.el
-;; Version: 0.1
+;; Version: 0.2
 ;; Package-Requires: ((emacs "25.2"))
 ;; Keywords: convenience multimedia
 
@@ -93,14 +93,25 @@ Otherwise prints error message."
     (list)
     (interactive))
   (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
-                    (call-process "shortcuts" nil "*shortcuts*" nil "run" name)))
+                                     (call-process "shortcuts" nil "*shortcuts*" nil "run" name)))
+
+;;;###autoload
+(defun siri-shortcuts-run-async (name)
+  "Run a macOS Shortcut with a given NAME without waiting for completion."
+  (thread-first
+    "Shortcut name: "
+    (completing-read (siri-shortcuts-list))
+    (list)
+    (interactive))
+  (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
+                                     (start-process "shortcuts" "*shortcuts*" "shortcuts" "run" name)))
 
 ;;;###autoload
 (defun siri-shortcuts-open-app ()
   "Open the Shortcuts app."
   (interactive)
   (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
-                    (call-process "open" nil 0 nil "-a" "Shortcuts.app")))
+                                     (call-process "open" nil 0 nil "-a" "Shortcuts.app")))
 
 ;;;###autoload
 (defun siri-shortcuts-create ()
@@ -125,7 +136,7 @@ Otherwise prints error message."
   "Open the Shortcuts Gallery."
   (interactive)
   (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
-								(siri-shortcuts-browse-url "gallery")))
+                                (siri-shortcuts-browse-url "gallery")))
 
 ;;;###autoload
 (defun siri-shortcuts-gallery-search (query)

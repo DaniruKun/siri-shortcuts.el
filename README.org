@@ -68,6 +68,7 @@ This is a small demo of running a Siri Shortcut than turns on a Yeelight Light S
   Run one of these commands:
 
   + =siri-shortcuts-run=: Run a Siri Shortcut from a list of available Shortcuts.
+  + =siri-shortcuts-run-async=: Same as ~siri-shortcuts-run~, but asynchronous.
   + =siri-shortcuts-gallery-open=: Open the Shortcuts Gallery.
   + =siri-shortcuts-gallery-search=: Search the Shortcuts Gallery.
   + =siri-shortcuts-open-app=: Open the Shortcuts app.
