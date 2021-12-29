@@ -4,7 +4,7 @@
 
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
 ;; URL: https://github.com/DaniruKun/siri-shortcuts.el
-;; Version: 0.2
+;; Version: 0.3
 ;; Package-Requires: ((emacs "25.2"))
 ;; Keywords: convenience multimedia
 
@@ -87,22 +87,16 @@ Otherwise prints error message."
 ;;;###autoload
 (defun siri-shortcuts-run (name)
   "Run a macOS Shortcut with a given NAME."
-  (thread-first
-    "Shortcut name: "
-    (completing-read (siri-shortcuts-list))
-    (list)
-    (interactive))
+  (interactive
+   (list (completing-read "Shortcut name: " (siri-shortcuts-list))))
   (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
                                      (call-process "shortcuts" nil "*shortcuts*" nil "run" name)))
 
 ;;;###autoload
 (defun siri-shortcuts-run-async (name)
   "Run a macOS Shortcut with a given NAME without waiting for completion."
-  (thread-first
-    "Shortcut name: "
-    (completing-read (siri-shortcuts-list))
-    (list)
-    (interactive))
+  (interactive
+   (list (completing-read "Shortcut name: " (siri-shortcuts-list))))
   (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
                                      (start-process "shortcuts" "*shortcuts*" "shortcuts" "run" name)))
 
@@ -123,13 +117,10 @@ Otherwise prints error message."
 ;;;###autoload
 (defun siri-shortcuts-edit (name)
   "Edit a Shortcut with the given NAME."
-  (thread-first
-    "Shortcut name: "
-    (completing-read (siri-shortcuts-list))
-    (list)
-    (interactive))
+  (interactive
+   (list (completing-read "Shortcut name: " (siri-shortcuts-list))))
   (siri-shortcuts-with-min-macos-ver siri-shortcuts-ver-monterey
-                    (siri-shortcuts-browse-url "open-shortcut" name)))
+                                     (siri-shortcuts-browse-url "open-shortcut" name)))
 
 ;;;###autoload
 (defun siri-shortcuts-gallery-open ()
